@@ -1,2 +1,5 @@
 streamlit==1.26.0
 requests==2.31.0
+pyarrow==14.0.1
+pandas
+numpy

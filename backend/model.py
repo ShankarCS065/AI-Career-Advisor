@@ -15,7 +15,12 @@ class CareerAdvisorModel:
             port=os.getenv("DB_PORT")
         )
         self.cursor = self.conn.cursor()
-        self.redis_client = redis.StrictRedis(host="redis", port=6379, db=0, decode_responses=True)
+
+        # Get Redis Host & Port from environment variables
+        redis_host = os.getenv("REDIS_HOST", "redis")
+        redis_port = int(os.getenv("REDIS_PORT", 6379))
+
+        self.redis_client = redis.StrictRedis(host=redis_host, port=redis_port, db=0, decode_responses=True)
 
     def suggest_careers(self, user_skills, user_interests):
         cache_key = f"{user_skills}_{user_interests}"
