@@ -3,6 +3,7 @@ version: "3.8"
 services:
   db:
     image: postgres:latest
+    container_name: postgres-db
     restart: always
     environment:
       POSTGRES_DB: career_advisor
@@ -12,24 +13,36 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   redis:
     image: redis:latest
+    container_name: redis-cache
     restart: always
     ports:
       - "6379:6379"
 
   backend:
     build: ./backend
+    container_name: fastapi-backend
     restart: always
     ports:
       - "8000:8000"
     depends_on:
       - db
       - redis
+    environment:
+      - DB_NAME=career_advisor
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
   frontend:
     build: ./frontend
+    container_name: streamlit-frontend
     restart: always
     ports:
       - "8501:8501"
@@ -38,3 +51,4 @@ services:
 
 volumes:
   pgdata:
+    name: pgdata-volume

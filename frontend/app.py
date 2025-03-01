@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
 
-BACKEND_URL = "http://localhost:8000"
+# Use "backend" instead of "localhost" when running in Docker
+BACKEND_URL = "http://backend:8000"
 
 def main():
     st.title("🚀 AI Career Advisor")
@@ -16,14 +17,17 @@ def main():
         if user_skills and user_interests:
             endpoint = f"{BACKEND_URL}/suggest"
             payload = {"skills": user_skills, "interests": user_interests}
-            response = requests.post(endpoint, json=payload)
-            
-            if response.status_code == 200:
+
+            try:
+                response = requests.post(endpoint, json=payload)
+                response.raise_for_status()  # Raise error for bad responses (4xx, 5xx)
+
                 data = response.json()
                 st.subheader("Career Recommendations")
-                st.write(data["suggestions"])
-            else:
-                st.error("❌ Error: Unable to get suggestions from the server.")
+                st.write(data.get("suggestions", "No suggestions available."))
+
+            except requests.exceptions.RequestException as e:
+                st.error(f"❌ Error: Unable to get suggestions from the server.\n{e}")
         else:
             st.warning("⚠️ Please fill out both skills and interests.")
 
