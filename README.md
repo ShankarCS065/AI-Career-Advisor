@@ -1,8 +1,9 @@
 # AI Career Advisor
 
 This project is an AI-powered career advisor that suggests potential career paths based on a user's skills and interests. It uses GPT via LangChain for generating suggestions.
-![App Screenshot](https://github.com/ShankarCS065/PregnancyVitalTracker/blob/main/app/src/main/res/drawable/aib.png)
 
+### 🎥 Demo 
+![Demo](https://github.com/ShankarCS065/AI-Career-Advisor/blob/main/Resforgit/CyfutureProjectRec.gif)
 ## Features
 
 - **Backend:** FastAPI for handling API requests.
