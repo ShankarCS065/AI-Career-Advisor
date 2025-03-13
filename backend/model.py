@@ -44,18 +44,21 @@ class CareerAdvisorModel:
         if cached_result:
             return cached_result.split(",")
 
-        # Query PostgreSQL for career matches
-        query = """
-        SELECT career FROM careers 
-        WHERE required_skills ILIKE %s OR typical_interests ILIKE %s
-        """
-        self.cursor.execute(query, (f"%{user_skills}%", f"%{user_interests}%"))
-        results = self.cursor.fetchall()
+        try:
+            # Query PostgreSQL for career matches
+            query = """
+            SELECT career FROM careers 
+            WHERE required_skills ILIKE %s OR typical_interests ILIKE %s
+            """
+            self.cursor.execute(query, (f"%{user_skills}%", f"%{user_interests}%"))
+            results = self.cursor.fetchall()
 
-        # Format response
-        response = [row[0] for row in results] if results else ["No suitable careers found."]
+            # Format response
+            response = [row[0] for row in results] if results else ["No suitable careers found."]
 
-        # Store result in Redis (cache expires in 1 hour)
-        self.redis_client.set(cache_key, ",".join(response), ex=3600)
-        
-        return response
+            # Store result in Redis (cache expires in 1 hour)
+            self.redis_client.set(cache_key, ",".join(response), ex=3600)
+            
+            return response
+        except Exception as e:
+            return [f"Database query error: {str(e)}"]

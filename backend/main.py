@@ -15,8 +15,8 @@ app = FastAPI()
 # Initialize the CareerAdvisorModel
 advisor_model = CareerAdvisorModel()
 
-# Initialize GPT-4 model
-llm = ChatOpenAI(temperature=0.7, model_name="gpt-4", openai_api_key=api_key)
+# Initialize GPT-3.5-turbo model
+llm = ChatOpenAI(temperature=0.7, model_name="gpt-3.5-turbo", openai_api_key=api_key)
 
 @app.get("/")
 def root():
@@ -25,7 +25,7 @@ def root():
 @app.post("/suggest")
 def suggest_careers(skills: str = Body(...), interests: str = Body(...)):
     """
-    API endpoint to suggest careers based on skills and interests.
+    API endpoint to suggest careers based on user skills and interests.
     """
     # Preprocess input text
     skills_processed = preprocess_text(skills)
@@ -34,12 +34,13 @@ def suggest_careers(skills: str = Body(...), interests: str = Body(...)):
     # Get career suggestions from PostgreSQL
     suggestions = advisor_model.suggest_careers(skills_processed, interests_processed)
 
-    # If no careers found, use GPT-4 for AI-based advice
-    
+    # If no careers found, use GPT-3.5-turbo for AI-based advice
     if not suggestions or suggestions == ["No suitable careers found."]:
         prompt = f"Based on the user's skills: {skills} and interests: {interests}, suggest the most suitable career options."
-        response = llm.invoke(prompt)
-        suggestions = response.content if response else ["No career suggestions available."]
-     
-    return {"suggestions": suggestions}
+        try:
+            response = llm.invoke(prompt)
+            suggestions = response.content if response else ["No career suggestions available."]
+        except Exception as e:
+            return {"error": f"Error generating AI-based career advice: {str(e)}"}
 
+    return {"suggestions": suggestions}

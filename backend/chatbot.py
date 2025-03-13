@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-# Initialize GPT-4 model
-llm = ChatOpenAI(temperature=0.7, model_name="gpt-4", openai_api_key=api_key)
+# Initialize GPT-3.5-turbo model
+llm = ChatOpenAI(temperature=0.7, model_name="gpt-3.5-turbo", openai_api_key=api_key)
 
 # Define prompt template
 prompt = PromptTemplate(
@@ -18,8 +18,11 @@ prompt = PromptTemplate(
 
 def get_career_advice(skills, interests):
     """
-    Generate career advice using GPT-4.
+    Generate career advice using GPT-3.5-turbo.
     """
     formatted_prompt = prompt.format(skills=skills, interests=interests)
-    response = llm.invoke(formatted_prompt)  # Correct method to call LLM
-    return response.content if response else "No career suggestions available."
+    try:
+        response = llm.invoke(formatted_prompt)  # Correct method to call LLM
+        return response.content if response else "No career suggestions available."
+    except Exception as e:
+        return f"Error generating career advice: {str(e)}"
