@@ -1,0 +1,6 @@
+# Ignore virtual environments
+venv/
+__pycache__/
+*.pyd
+*.dll
+*.lib
