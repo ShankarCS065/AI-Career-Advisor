@@ -1,12 +1,18 @@
-# Use Debian-based Python image for better compatibility with pyarrow
-FROM python:3.9-slim
+# Use the full Python image for better compatibility
+FROM python:3.9
 
 # Set working directory inside the container
 WORKDIR /app
 
 # Install system dependencies needed for pyarrow and other dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential cmake g++ curl wget unzip \
+    apt-utils \
+    build-essential \
+    cmake \
+    g++ \
+    curl \
+    wget \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container

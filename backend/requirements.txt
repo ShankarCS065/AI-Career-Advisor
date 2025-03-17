@@ -1,21 +1,18 @@
-# Web Framework
-fastapi==0.100.0
+fastapi==0.95.2
 uvicorn==0.22.0
-
-# Database
-psycopg2==2.9.9
+psycopg2-binary==2.9.10
 redis==5.0.0
-
-# Machine Learning & NLP
-spacy==3.6.1
+spacy==3.5.2
 numpy==1.26.0
-thinc==8.1.10
-
-# Environment Variables
+pandas==1.5.3
+scikit-learn==1.2.2
+transformers==4.31.0
+torch==2.0.0
 python-dotenv==1.0.1
-
-# OpenAI & LangChain
 openai>=1.10.0,<2.0.0
-langchain
+langchain==0.1.20
 langchain-openai==0.1.5
-langchain-community
+langchain-community==0.0.38
+requests==2.31.0
+tqdm>=4.64.0    # Progress bar for ML/NLP tasks
+fastapi[all]    # Ensures all FastAPI dependencies like pydantic, starlette
